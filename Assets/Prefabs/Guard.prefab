@@ -94,9 +94,9 @@ GameObject:
   m_Component:
   - component: {fileID: 402688148732094394}
   - component: {fileID: 1671246042163116511}
-  - component: {fileID: 277866706538863610}
   - component: {fileID: 4480704467930192098}
   - component: {fileID: 2234890428138557985}
+  - component: {fileID: 4880534890695835985}
   m_Layer: 0
   m_Name: Guard
   m_TagString: Untagged
@@ -172,32 +172,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &277866706538863610
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7022620351291226913}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.4, y: 0.4}
-  m_EdgeRadius: 0
 --- !u!50 &4480704467930192098
 Rigidbody2D:
   serializedVersion: 4
@@ -239,6 +213,26 @@ MonoBehaviour:
   chaseSpeed: 4
   turnSpeed: 360
   catchDistance: 0.8
+  lookAheadMax: 1
+  feelerLength: 1.2
+  avoidStrength: 1.5
+  shareRadius: 12
   loseSightTime: 2
   searchTime: 4
   waypoints: []
+--- !u!58 &4880534890695835985
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7022620351291226913}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: cae4b197bebf49b478043d12c09c9783, type: 2}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.2

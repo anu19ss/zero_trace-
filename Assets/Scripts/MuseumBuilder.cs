@@ -12,6 +12,11 @@ public class MuseumBuilder : MonoBehaviour
     public TextAsset mapFile;
     public bool setupCamera = true;
 
+    // Optional art. If empty, plain coloured blocks are used.
+    // Use a seamless tile (for example 16x16 or 32x32 px) with Pixels Per Unit set so one tile = 1 unit.
+    public Sprite floorSprite;
+    public Sprite wallSprite;
+
     // Optional. If empty, a plain orange square is drawn instead.
     public GameObject doorPrefab1;
     public GameObject doorPrefab2;
@@ -67,7 +72,8 @@ public class MuseumBuilder : MonoBehaviour
         Transform markers = NewGroup("Markers");
 
         // Floor
-        Make("Floor", transform, Vector3.zero, new Vector2(Width, Height), new Color(0.18f, 0.18f, 0.22f), 0, false, false);
+        GameObject floorObj = Make("Floor", transform, Vector3.zero, new Vector2(Width, Height), new Color(0.18f, 0.18f, 0.22f), 0, false, false);
+        ApplyTiled(floorObj, floorSprite, new Vector2(Width, Height));
 
         for (int r = 0; r < Height; r++)
         {
@@ -84,7 +90,8 @@ public class MuseumBuilder : MonoBehaviour
                     int len = end - c + 1;
                     for (int k = c; k <= end; k++) Blocked[r, k] = true;
                     Vector3 pos = CellToWorld(r, c) + new Vector3((len - 1) / 2f, 0f, 0f);
-                    Make("Wall_r" + r + "_c" + c, walls, pos, new Vector2(len, 1), new Color(0.33f, 0.35f, 0.4f), 1, true, false);
+                    GameObject wallObj = Make("Wall_r" + r + "_c" + c, walls, pos, new Vector2(len, 1), new Color(0.33f, 0.35f, 0.4f), 1, true, false);
+                    ApplyTiled(wallObj, wallSprite, new Vector2(len, 1));
                     c = end + 1;
                     continue;
                 }
@@ -118,8 +125,8 @@ public class MuseumBuilder : MonoBehaviour
                             bool horiz = IsLaser(lines, r, c - 1) || IsLaser(lines, r, c + 1);
                             bool vert = IsLaser(lines, r - 1, c) || IsLaser(lines, r + 1, c);
                             Color red = new Color(0.9f, 0.2f, 0.2f);
-                            if (horiz || !vert) Make("Laser", lasers, p, new Vector2(1f, 0.25f), red, 2, true, true);
-                            if (vert) Make("Laser", lasers, p, new Vector2(0.25f, 1f), red, 2, true, true);
+                            if (horiz || !vert) Make("Laser", lasers, p, new Vector2(1f, 0.25f), red, 2, true, true).AddComponent<Laser>();
+                            if (vert) Make("Laser", lasers, p, new Vector2(0.25f, 1f), red, 2, true, true).AddComponent<Laser>();
                             break;
                         }
                     case 'S': Marker("ThiefStart", markers, p, new Color(0.2f, 0.8f, 0.4f), thiefPrefab); break;
@@ -143,6 +150,22 @@ public class MuseumBuilder : MonoBehaviour
             cam.orthographicSize = Height / 2f + 1f;
             cam.transform.position = new Vector3(0f, 0f, -10f);
         }
+    }
+
+    // Repeats a tile sprite across the object instead of stretching it.
+    static void ApplyTiled(GameObject go, Sprite sprite, Vector2 size)
+    {
+        if (sprite == null) return;
+        SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.color = Color.white;
+        sr.drawMode = SpriteDrawMode.Tiled;
+        sr.tileMode = SpriteTileMode.Continuous;
+        sr.size = size;
+        go.transform.localScale = Vector3.one;
+
+        BoxCollider2D box = go.GetComponent<BoxCollider2D>();
+        if (box != null) box.size = size;
     }
 
     static bool IsLaser(string[] lines, int r, int c)

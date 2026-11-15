@@ -152,8 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1364884139fc13940992523a9ff29ed8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapFile: {fileID: 4900000, guid: 6721b06cbf5f6764a9c2233158662fab, type: 3}
+  mapFile: {fileID: 4900000, guid: 16498032e8e6915418ff8e4c1caccba3, type: 3}
   setupCamera: 1
+  floorSprite: {fileID: 0}
+  wallSprite: {fileID: 0}
   doorPrefab1: {fileID: 8132725672040132548, guid: b6a4400c8112b1d4bb0abef7680cdf4b, type: 3}
   doorPrefab2: {fileID: 0}
   thiefPrefab: {fileID: 6977780370622774695, guid: 9f4040a6d099015429702c84890e7a3b, type: 3}
@@ -168,7 +170,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 834984489}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.714923, y: 0.583402, z: 0.040329497}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

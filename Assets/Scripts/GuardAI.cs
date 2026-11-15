@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // Guard AI, version 1.
@@ -21,6 +22,14 @@ public class GuardAI : MonoBehaviour
     public float turnSpeed = 360f;               // degrees per second
     public float catchDistance = 0.8f;
 
+    [Header("Steering")]
+    public float lookAheadMax = 1f;              // seconds: caps how far ahead Pursuit predicts
+    public float feelerLength = 1.2f;            // wall-avoidance whisker length (cells)
+    public float avoidStrength = 1.5f;           // how hard walls push the guard away
+
+    [Header("Teamwork")]
+    public float shareRadius = 12f;              // guards this close hear a chase alert
+
     [Header("Timing")]
     public float loseSightTime = 2f;
     public float searchTime = 4f;
@@ -32,9 +41,12 @@ public class GuardAI : MonoBehaviour
     public State CurrentState { get; private set; } = State.Patrol;
     public float Detection { get; private set; }  // 0 to 1
 
+    static readonly List<GuardAI> all = new List<GuardAI>();
+
     Rigidbody2D rb;
     Transform player;
     ThiefController thief;
+    Rigidbody2D thiefRb;
     SpriteRenderer cone;
     Vector2 home;
     Vector2 targetPoint;
@@ -53,6 +65,7 @@ public class GuardAI : MonoBehaviour
         {
             player = p.transform;
             thief = p.GetComponent<ThiefController>();
+            thiefRb = p.GetComponent<Rigidbody2D>();
         }
         else
         {
@@ -99,7 +112,7 @@ public class GuardAI : MonoBehaviour
                 if (sees)
                 {
                     timer = 0f;
-                    MoveTo(player.position, chaseSpeed);
+                    MoveTo(PredictedPosition(), chaseSpeed);
                     if (Vector2.Distance(transform.position, player.position) < catchDistance) Caught();
                 }
                 else
@@ -147,6 +160,46 @@ public class GuardAI : MonoBehaviour
     {
         lastKnown = player.position;
         Enter(State.Chase);
+        ShareAlert();
+    }
+
+    // ---------- teamwork ----------
+
+    void OnEnable()
+    {
+        all.Add(this);
+    }
+
+    void OnDisable()
+    {
+        all.Remove(this);
+    }
+
+    // Called by cameras and lasers: the nearest guards go and investigate this position.
+    public static void AlertNearest(Vector2 pos, int count)
+    {
+        List<GuardAI> sorted = new List<GuardAI>(all);
+        sorted.Sort((a, b) => Vector2.Distance(a.transform.position, pos).CompareTo(Vector2.Distance(b.transform.position, pos)));
+        for (int i = 0; i < sorted.Count && i < count; i++) sorted[i].HearAlert(pos);
+    }
+
+    // A guard that is already chasing ignores alerts; everyone else goes to investigate.
+    public void HearAlert(Vector2 pos)
+    {
+        if (CurrentState == State.Chase) return;
+        targetPoint = pos;
+        Enter(State.Investigate);
+    }
+
+    // When this guard starts a chase, nearby guards are told where the thief was seen.
+    void ShareAlert()
+    {
+        foreach (GuardAI other in all)
+        {
+            if (other == this) continue;
+            if (Vector2.Distance(other.transform.position, transform.position) <= shareRadius)
+                other.HearAlert(lastKnown);
+        }
     }
 
     void Caught()
@@ -180,8 +233,48 @@ public class GuardAI : MonoBehaviour
         if (dir.magnitude < 0.05f) { desiredVel = Vector2.zero; return; }
 
         dir.Normalize();
+        dir = AvoidWalls(dir);
         FaceDirection(dir);
         desiredVel = dir * speed;
+    }
+
+    // PURSUIT: aim at where the thief will be, not where he is now.
+    // The prediction time is the travel time to him, capped by lookAheadMax.
+    Vector2 PredictedPosition()
+    {
+        Vector2 pos = player.position;
+        if (thiefRb == null) return pos;
+
+        float dist = Vector2.Distance(transform.position, pos);
+        float t = Mathf.Min(dist / chaseSpeed, lookAheadMax);
+        return pos + thiefRb.velocity * t;
+    }
+
+    // WALL AVOIDANCE: three whiskers (straight ahead and +/- 35 degrees).
+    // Any whisker that touches a wall pushes the guard along that wall's normal,
+    // and the push is stronger the closer the wall is.
+    Vector2 AvoidWalls(Vector2 dir)
+    {
+        Vector2 result = dir;
+        float[] angles = { 0f, 35f, -35f };
+
+        foreach (float angle in angles)
+        {
+            Vector2 feeler = Quaternion.Euler(0f, 0f, angle) * (Vector3)dir;
+            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, feeler, feelerLength);
+
+            foreach (RaycastHit2D h in hits)
+            {
+                if (!IsWall(h.collider)) continue;
+                float closeness = 1f - h.distance / feelerLength;
+                result += h.normal * avoidStrength * closeness;
+                break;   // only the nearest wall on this whisker counts
+            }
+        }
+
+        // Head-on wall: the pushes can cancel out, so slide along the wall instead.
+        if (result.sqrMagnitude < 0.05f) result = new Vector2(-dir.y, dir.x);
+        return result.normalized;
     }
 
     // TODO: replace with member 1's A* (FindPath) so the guard walks around walls.
@@ -244,7 +337,7 @@ public class GuardAI : MonoBehaviour
     }
 
     // Walls and doors are created by MuseumBuilder under groups named "Walls" and "Doors".
-    static bool IsWall(Collider2D c)
+    public static bool IsWall(Collider2D c)
     {
         if (c == null || c.isTrigger) return false;
         Transform p = c.transform.parent;
