@@ -135,7 +135,7 @@ public class MuseumBuilder : MonoBehaviour
                     case 'H': Marker("HidingSpot", markers, p, new Color(0.5f, 0.5f, 0.55f)); break;
                     case 'C': Marker("Camera", markers, p, new Color(0.5f, 0.35f, 0.9f), cameraPrefab); break;
                     case 'G': Marker("Guard", markers, p, new Color(0.9f, 0.25f, 0.25f), guardPrefab); break;
-                    case 'D': Marker("Dog", markers, p, new Color(0.9f, 0.5f, 0.2f), dogPrefab); break;
+                    case 'D': break;
                     case 'K': AddPickup(Marker("Keycard1", markers, p, new Color(0.25f, 0.75f, 0.75f)), Pickup.Kind.Keycard1); break;
                     case 'Q': AddPickup(Marker("Keycard2", markers, p, new Color(0.25f, 0.75f, 0.75f)), Pickup.Kind.Keycard2); break;
                 }
