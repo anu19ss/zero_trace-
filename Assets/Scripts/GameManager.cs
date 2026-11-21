@@ -1,9 +1,8 @@
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Tracks loot, keycards, game over and win. It creates itself when you press Play,
-// so you do not need to add it to the scene.
-// Press R at any time to restart. (Add the scene in File > Build Settings > Add Open Scenes.)
+// Tracks loot, keycards, game over and win.
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -15,17 +14,24 @@ public class GameManager : MonoBehaviour
     bool key1, key2;
     string message = "";
     float messageUntil;
+
     GUIStyle bigStyle, smallStyle, msgStyle;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void AutoCreate()
     {
-        if (Instance == null) new GameObject("GameManager").AddComponent<GameManager>();
+        if (Instance == null)
+            new GameObject("GameManager").AddComponent<GameManager>();
     }
 
     void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -33,10 +39,10 @@ public class GameManager : MonoBehaviour
 
     void OnDestroy()
     {
-        if (Instance == this) SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (Instance == this)
+            SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // Reset everything whenever a scene (re)loads.
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Loot = 0;
@@ -50,7 +56,11 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        {
+            SceneManager.LoadScene(
+                SceneManager.GetActiveScene().buildIndex
+            );
+        }
     }
 
     public void AddLoot(int value)
@@ -61,7 +71,11 @@ public class GameManager : MonoBehaviour
 
     public void GiveKey(int number)
     {
-        if (number == 1) key1 = true; else key2 = true;
+        if (number == 1)
+            key1 = true;
+        else
+            key2 = true;
+
         Message("Got keycard " + number);
     }
 
@@ -78,7 +92,9 @@ public class GameManager : MonoBehaviour
 
     public void Caught()
     {
-        if (GameOver) return;
+        if (GameOver)
+            return;
+
         GameOver = true;
         Won = false;
         Time.timeScale = 0f;
@@ -86,12 +102,15 @@ public class GameManager : MonoBehaviour
 
     public void ReachedExit()
     {
-        if (GameOver) return;
+        if (GameOver)
+            return;
+
         if (Loot <= 0)
         {
             Message("Grab some loot before you escape!");
             return;
         }
+
         GameOver = true;
         Won = true;
         Time.timeScale = 0f;
@@ -118,16 +137,39 @@ public class GameManager : MonoBehaviour
         }
 
         string keys = (key1 ? "1 " : "") + (key2 ? "2" : "");
-        GUI.Label(new Rect(10, 8, 600, 28), "Loot: $" + Loot + "    Keycards: " + keys, smallStyle);
-        GUI.Label(new Rect(10, 32, 700, 28), "WASD move  |  Shift run  |  Ctrl or C crouch  |  R restart", smallStyle);
+
+        GUI.Label(
+            new Rect(10, 8, 600, 28),
+            "Loot: $" + Loot + "    Keycards: " + keys,
+            smallStyle
+        );
+
+        GUI.Label(
+            new Rect(10, 32, 700, 28),
+            "WASD move  |  Shift run  |  Ctrl or C crouch  |  R restart",
+            smallStyle
+        );
 
         if (Time.unscaledTime < messageUntil)
-            GUI.Label(new Rect(0, Screen.height - 70, Screen.width, 40), message, msgStyle);
+        {
+            GUI.Label(
+                new Rect(0, Screen.height - 70, Screen.width, 40),
+                message,
+                msgStyle
+            );
+        }
 
         if (GameOver)
         {
-            string text = Won ? "ESCAPED with $" + Loot + "!\nPress R to play again" : "CAUGHT!\nPress R to restart";
-            GUI.Label(new Rect(0, 0, Screen.width, Screen.height), text, bigStyle);
+            string text = Won
+                ? "ESCAPED with $" + Loot + "!\nPress R to play again"
+                : "CAUGHT!\nPress R to restart";
+
+            GUI.Label(
+                new Rect(0, 0, Screen.width, Screen.height),
+                text,
+                bigStyle
+            );
         }
     }
 }
