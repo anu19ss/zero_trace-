@@ -1,0 +1,475 @@
+fileFormatVersion: 2
+guid: e42c378754d7b4a118fb5a4c56cd04d3
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 0
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_0
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 664
+        width: 261
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1151ad0aff9914f40b69860a04117ad5
+      internalID: -257926078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_1
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 657
+        width: 251
+        height: 227
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98e608913be2b403bb45ee8ae4a699a6
+      internalID: 508855807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_2
+      rect:
+        serializedVersion: 2
+        x: 929
+        y: 664
+        width: 232
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3c1bafdf7f5747e3bad5a12ddab49db
+      internalID: -1374210780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_3
+      rect:
+        serializedVersion: 2
+        x: 1230
+        y: 662
+        width: 221
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 405adfe2bd7304241b422d6321b0ae9c
+      internalID: -352648456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_4
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 434
+        width: 265
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82bf1b8e0ebc541beb2f4ddd8816e629
+      internalID: -764428170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_5
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 421
+        width: 249
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edf52943d7277468f9432f087e605759
+      internalID: -1064298105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_6
+      rect:
+        serializedVersion: 2
+        x: 933
+        y: 422
+        width: 233
+        height: 230
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5331d43424ad14d8097b38e5355d88ef
+      internalID: 1969287112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_7
+      rect:
+        serializedVersion: 2
+        x: 1232
+        y: 420
+        width: 227
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ff2afa0ae4844a39ac890636a417033
+      internalID: 179542268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_8
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 243
+        width: 255
+        height: 179
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 534819803cdbe4325b35ff50d8a68d5a
+      internalID: 423266046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_9
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 223
+        width: 241
+        height: 193
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e16fbb05a851643f5b64b7d8ac19cfab
+      internalID: -184993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_10
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 220
+        width: 245
+        height: 196
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c4ae929efca44025a07e89a55241a8e
+      internalID: -1691466655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_11
+      rect:
+        serializedVersion: 2
+        x: 1194
+        y: 214
+        width: 257
+        height: 201
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4bfb6e3fd75f3491bb1c401c4322eb67
+      internalID: -1510518638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_12
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 32
+        width: 257
+        height: 182
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c1eef63bf30f4a269003c488e14b5c2
+      internalID: 389363795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_13
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 27
+        width: 253
+        height: 182
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a779891ffe2c64dc5917036b9488ad5a
+      internalID: 1852223861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_14
+      rect:
+        serializedVersion: 2
+        x: 909
+        y: 23
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 737a54b8fa2444f41affa4e1cdb6176a
+      internalID: -810344979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: German Shepherd Pixel Walk Cycle_15
+      rect:
+        serializedVersion: 2
+        x: 1194
+        y: 31
+        width: 270
+        height: 177
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca4a7eeceaacf42d7a48f1c976e59d15
+      internalID: 1132857358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 7e002b6b4773b46d2a117306ff9d30ad
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      German Shepherd Pixel Walk Cycle_14: -810344979
+      German Shepherd Pixel Walk Cycle_9: -184993
+      German Shepherd Pixel Walk Cycle_5: -1064298105
+      German Shepherd Pixel Walk Cycle_10: -1691466655
+      German Shepherd Pixel Walk Cycle_1: 508855807
+      German Shepherd Pixel Walk Cycle_15: 1132857358
+      German Shepherd Pixel Walk Cycle_3: -352648456
+      German Shepherd Pixel Walk Cycle_7: 179542268
+      German Shepherd Pixel Walk Cycle_4: -764428170
+      German Shepherd Pixel Walk Cycle_13: 1852223861
+      German Shepherd Pixel Walk Cycle_2: -1374210780
+      German Shepherd Pixel Walk Cycle_0: -257926078
+      German Shepherd Pixel Walk Cycle_6: 1969287112
+      German Shepherd Pixel Walk Cycle_11: -1510518638
+      German Shepherd Pixel Walk Cycle_8: 423266046
+      German Shepherd Pixel Walk Cycle_12: 389363795
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
