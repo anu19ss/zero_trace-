@@ -2,7 +2,7 @@ using UnityEngine;
 
 // Added automatically by MuseumBuilder to keycard doors.
 // The thief opens a door by walking into it with the matching keycard.
-// Guards open every door they bump into (they carry keys).
+// Guards and cops open doors they bump into (they carry keys).
 // A door closes by itself after openTime seconds, once nobody is standing in the doorway.
 public class Door : MonoBehaviour
 {
@@ -28,7 +28,8 @@ public class Door : MonoBehaviour
 
         GameObject other = collision.collider.gameObject;
 
-        if (other.GetComponent<GuardAI>() != null)
+        if (other.GetComponent<GuardAI>() != null ||
+            other.GetComponent<CopAI>() != null)
         {
             Open();
             return;
@@ -69,7 +70,9 @@ public class Door : MonoBehaviour
         foreach (Collider2D h in hits)
         {
             if (h.gameObject == gameObject || h.isTrigger) continue;
-            if (h.CompareTag("Player") || h.GetComponent<GuardAI>() != null) return true;
+            if (h.CompareTag("Player") ||
+                h.GetComponent<GuardAI>() != null ||
+                h.GetComponent<CopAI>() != null) return true;
         }
         return false;
     }
