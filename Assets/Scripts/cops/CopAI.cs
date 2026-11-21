@@ -616,7 +616,7 @@ public class CopAI : MonoBehaviour
                     : null;
                 // Cops must contact closed doors so the existing Door logic
                 // can open them. Other static obstacles steer the cop away.
-                if (door == null && GuardAI.BlocksVision(hitCollider))
+                if (door == null && BlocksCopVision(hitCollider))
                 {
                     result += hits[j].normal * avoidStrength *
                         (1f - hits[j].distance / Mathf.Max(0.1f, feelerLength));
@@ -737,7 +737,7 @@ public class CopAI : MonoBehaviour
             hit.GetComponentInParent<Door>() != null ||
             hit.GetComponentInParent<CopAI>() != null)
             return false;
-        return GuardAI.BlocksVision(hit);
+        return BlocksCopVision(hit);
     }
 
     bool HasCopSpacing(Vector2 position)
@@ -802,11 +802,28 @@ public class CopAI : MonoBehaviour
             transform.position, delta / distance, distance, Physics2D.DefaultRaycastLayers);
         for (int i = 0; i < hits.Length; i++)
         {
-            if (GuardAI.BlocksVision(hits[i].collider) &&
+            if (BlocksCopVision(hits[i].collider) &&
                 hits[i].distance < distance - 0.02f)
                 return false;
         }
         return true;
+    }
+
+    static bool BlocksCopVision(Collider2D collider)
+    {
+        if (collider == null || collider.isTrigger)
+            return false;
+
+        Door door = collider.GetComponentInParent<Door>();
+        if (door != null)
+            return !door.IsOpen;
+
+        if (collider.GetComponentInParent<ThiefController>() != null ||
+            collider.GetComponentInParent<GuardAI>() != null ||
+            collider.GetComponentInParent<CopAI>() != null)
+            return false;
+
+        return collider.attachedRigidbody == null;
     }
 
     bool HearsPlayer()

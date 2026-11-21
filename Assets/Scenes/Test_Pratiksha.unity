@@ -287,7 +287,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 834984489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbbf992d9efc8774e86be1fc429a6c2e, type: 3}
+  m_Script: {fileID: 11500000, guid: 1364884139fc13940992523a9ff29ed8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mapFile: {fileID: 4900000, guid: 16498032e8e6915418ff8e4c1caccba3, type: 3}
@@ -303,6 +303,25 @@ MonoBehaviour:
   guardPrefab: {fileID: 7022620351291226913, guid: e4d7f0608261aef418632b102e2f260d, type: 3}
   dogPrefab: {fileID: 0}
   cameraPrefab: {fileID: 1744321830406199452, guid: 0b19caecab8f3e243acccafc2f085595, type: 3}
+  spawnDogsFromMap: 1
+  dogSprite: {fileID: 179542268, guid: e42c378754d7b4a118fb5a4c56cd04d3, type: 3}
+  dogAnimatorController: {fileID: 9100000, guid: 6d4fcd283e1d34ca980e41feecd73910, type: 2}
+  dogSpawnPositions:
+  - {x: -6.819129, y: -6.6371303}
+  - {x: -1.75, y: 8.51}
+  - {x: 8.95, y: 0}
+  - {x: -17.51, y: -3.75}
+  dogPatrolPointA:
+  - {x: -8.22, y: -6.72}
+  - {x: -2.06, y: 11.04}
+  - {x: 8.95, y: 0}
+  - {x: -11.23, y: -3.9}
+  dogPatrolPointB:
+  - {x: -1.45, y: -6.4}
+  - {x: -2.12, y: 5.81}
+  - {x: -18.67, y: 0}
+  - {x: -18.64, y: -4.57}
+  scentMarkerPrefab: {fileID: 3317784930527626101, guid: bc994df61f919434697e6c85a3ab9cac, type: 3}
 --- !u!4 &834984491
 Transform:
   m_ObjectHideFlags: 0

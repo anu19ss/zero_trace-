@@ -40,6 +40,8 @@ public class GuardAI : MonoBehaviour
 
     public State CurrentState { get; private set; } = State.Patrol;
     public float Detection { get; private set; }  // 0 to 1
+    public bool HasVisualContact { get; private set; }
+    public Vector2 LastKnownPosition { get { return lastKnown; } }
 
     static readonly List<GuardAI> all = new List<GuardAI>();
 
@@ -78,9 +80,14 @@ public class GuardAI : MonoBehaviour
 
     void Update()
     {
-        if (player == null) return;
+        if (player == null)
+        {
+            HasVisualContact = false;
+            return;
+        }
 
         bool sees = CanSeePlayer();
+        HasVisualContact = sees;
         if (sees)
         {
             lastKnown = player.position;

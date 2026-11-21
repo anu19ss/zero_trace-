@@ -19,6 +19,8 @@ public class SecurityCameraAI : MonoBehaviour
     public float alertCooldown = 5f;
 
     public float Detection { get; private set; }
+    public bool HasVisualContact { get; private set; }
+    public Vector2 LastSeenPosition { get; private set; }
 
     Transform player;
     ThiefController thief;
@@ -52,9 +54,18 @@ public class SecurityCameraAI : MonoBehaviour
         float angle = baseAngle + Mathf.Sin(Time.time * sweepSpeed + phase) * sweepAngle;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
-        if (player == null) return;
+        if (player == null)
+        {
+            HasVisualContact = false;
+            return;
+        }
 
-        if (CanSeePlayer()) Detection = Mathf.Min(1f, Detection + Time.deltaTime / detectTime);
+        HasVisualContact = CanSeePlayer();
+        if (HasVisualContact)
+        {
+            LastSeenPosition = player.position;
+            Detection = Mathf.Min(1f, Detection + Time.deltaTime / detectTime);
+        }
         else Detection = Mathf.Max(0f, Detection - detectDecay * Time.deltaTime);
 
         if (Detection >= 1f && Time.time >= nextAlertTime)
