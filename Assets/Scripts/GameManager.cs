@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public int DogTreatCost = 50;
     public float DogTreatUseRadius = 3f;
     public float DogTreatDistractionDuration = 5f;
+    Sprite dogTreatVisualSprite;
 
     bool key1, key2;
     string message = "";
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
+        dogTreatVisualSprite = Resources.Load<Sprite>("DogTreatBone");
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -166,9 +168,27 @@ public class GameManager : MonoBehaviour
 
         // Consume the treat only if distraction succeeds.
         HasDogTreat = false;
+        ShowDogTreatVisual(nearestDog, DogTreatDistractionDuration);
 
         Message("Dog distracted! Run!");
         return true;
+    }
+
+    void ShowDogTreatVisual(DogAI dog, float duration)
+    {
+        if (dog == null || dogTreatVisualSprite == null)
+            return;
+
+        GameObject visual = new GameObject("DogTreatVisual");
+        visual.transform.SetParent(dog.transform, false);
+        visual.transform.localPosition = new Vector3(0.35f, -0.2f, -0.1f);
+        visual.transform.localScale = Vector3.one * 0.25f;
+
+        SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+        renderer.sprite = dogTreatVisualSprite;
+        renderer.sortingOrder = 11;
+
+        Destroy(visual, duration);
     }
 
     // Finds the player position using the dog's perception system.
