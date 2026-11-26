@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Adds non-blocking room furnishings, wall art and one collectible gallery painting.
-// Crouched hiding remains governed by the existing H cells and ThiefController.
 public class MuseumEnvironmentDecorator : MonoBehaviour
 {
     public MuseumBuilder museum;
@@ -42,8 +40,6 @@ public class MuseumEnvironmentDecorator : MonoBehaviour
 
     void AddHidingCover(string[] lines, Transform root)
     {
-        // H cells already receive the existing crouch concealment bonus.
-        // Furniture is visual only, so it never blocks a doorway or path.
         int shelfCount = 0;
         for (int row = 0; row < museum.Height; row++)
         {
@@ -127,8 +123,6 @@ public class MuseumEnvironmentDecorator : MonoBehaviour
     {
         if (lines[row][col] != '.')
             return false;
-        // Tables and plants are placed only in open room interiors, with a
-        // one-cell walkable buffer around them.
         for (int r = row - 1; r <= row + 1; r++)
             for (int c = col - 1; c <= col + 1; c++)
                 if (lines[r][c] != '.')
@@ -174,8 +168,6 @@ public class MuseumEnvironmentDecorator : MonoBehaviour
         renderer.sprite = sprite;
         renderer.sortingOrder = 3;
 
-        // Keep hiding cells reachable while blocking contact with the base of
-        // their plant. Room tables and plants use their full visible footprint.
         if (objectName == "HidingPlant")
         {
             BoxCollider2D baseCollider = item.AddComponent<BoxCollider2D>();
@@ -207,15 +199,11 @@ public class MuseumEnvironmentDecorator : MonoBehaviour
             return;
 
         BoxCollider2D collider = item.AddComponent<BoxCollider2D>();
-        // Sprite bounds are in local units; the object's existing transform
-        // scale then keeps the collider aligned with the artwork.
         collider.size = renderer.sprite.bounds.size;
     }
 
     void AddGalleryLoot(string[] lines, Transform root, Sprite painting)
     {
-        // The existing bookshelf identifies the upper-left gallery. Select
-        // the nearest free floor cell around its centre, avoiding map items.
         Vector2Int preferred = new Vector2Int(5, 7);
         int bestRow = -1;
         int bestCol = -1;
@@ -271,9 +259,6 @@ public class MuseumEnvironmentDecorator : MonoBehaviour
             {
                 if (lines[row][col] != '#')
                     continue;
-                // A wall cell along a corridor normally has floor on only one
-                // side. Requiring floor on both opposing sides filtered out
-                // nearly every usable wall face, so no paintings were placed.
                 bool touchesFloor = IsOpen(lines[row - 1][col]) ||
                     IsOpen(lines[row + 1][col]) ||
                     IsOpen(lines[row][col - 1]) ||

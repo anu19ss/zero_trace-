@@ -2,18 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Builds a blockout museum from a text map (museum_map.txt) at runtime.
-// Legend:  # wall   . floor   1 keycard door 1   2 keycard door 2   L laser
-//          E exit   S thief start   $ loot   H hiding spot   C camera
-//          G guard spawn   D dog spawn   K keycard 1 pickup   Q keycard 2 pickup
-// Row 0 is the top of the map. 1 grid cell = 1 Unity unit.
 public class MuseumBuilder : MonoBehaviour
 {
     public TextAsset mapFile;
     public bool setupCamera = true;
 
-    // Optional art. If empty, plain coloured blocks are used.
-    // Use a seamless tile (for example 16x16 or 32x32 px) with Pixels Per Unit set so one tile = 1 unit.
+  
     public Sprite floorSprite;
     public Sprite wallSprite;
 
@@ -24,17 +18,17 @@ public class MuseumBuilder : MonoBehaviour
     [Header("Loot Sprites")]
     public Sprite lootSprite;
 
-    // Optional. If empty, a plain orange square is drawn instead.
+    
     public GameObject doorPrefab1;
     public GameObject doorPrefab2;
 
-    // Optional. If empty, a coloured square marker is drawn instead.
+   
     public GameObject thiefPrefab;
     public GameObject guardPrefab;
     public GameObject dogPrefab;
     public GameObject cameraPrefab;
     public bool spawnDogsFromMap;
-    public float dogScale = 0.6f;   // 1 = original size
+    public float dogScale = 0.6f;   
 
     [Header("Dog Visuals (used when no dog prefab is assigned)")]
     public Sprite dogSprite;
@@ -47,7 +41,7 @@ public class MuseumBuilder : MonoBehaviour
     public int Width { get; private set; }
     public int Height { get; private set; }
 
-    // true = wall or locked door. Use this for the A* grid.
+   
     public bool[,] Blocked { get; private set; }
 
     Sprite square;
@@ -90,7 +84,7 @@ public class MuseumBuilder : MonoBehaviour
         Transform dogs = NewGroup("Dogs");
         List<Vector2Int> dogSpawnCells = new List<Vector2Int>();
 
-        // Floor
+        
         GameObject floorObj = Make("Floor", transform, Vector3.zero, new Vector2(Width, Height), new Color(0.18f, 0.18f, 0.22f), 0, false, false);
         ApplyTiled(floorObj, floorSprite, new Vector2(Width, Height));
 
@@ -103,7 +97,7 @@ public class MuseumBuilder : MonoBehaviour
 
                 if (ch == '#')
                 {
-                    // merge a horizontal run of walls into one object
+                    
                     int end = c;
                     while (end + 1 < Width && lines[r][end + 1] == '#') end++;
                     int len = end - c + 1;
@@ -183,8 +177,6 @@ public class MuseumBuilder : MonoBehaviour
             }
         }
 
-        // Spawn dogs only after the blocked grid is complete so their patrol
-        // points can be selected from reachable floor cells.
         if (spawnDogsFromMap && FindObjectsOfType<DogAI>().Length == 0)
         {
             EnsureDogScentManager();
@@ -350,7 +342,7 @@ public class MuseumBuilder : MonoBehaviour
         return point.transform;
     }
 
-    // Repeats a tile sprite across the object instead of stretching it.
+    
     static void ApplyTiled(GameObject go, Sprite sprite, Vector2 size)
     {
         if (sprite == null) return;
@@ -397,12 +389,12 @@ public class MuseumBuilder : MonoBehaviour
         return Make(objName, parent, pos, new Vector2(0.6f, 0.6f), color, 3, false, false);
     }
 
-    // Makes a marker collectable: loot, keycards and exits react when the thief touches them.
+    
     void AddPickup(GameObject go, Pickup.Kind kind)
     {
         CircleCollider2D col = go.AddComponent<CircleCollider2D>();
         col.isTrigger = true;
-        col.radius = 0.8f;   // marker is scaled 0.6, so this is about half a cell in the world
+        col.radius = 0.8f;   
         Pickup pickup = go.AddComponent<Pickup>();
         pickup.kind = kind;
         pickup.value = 100;

@@ -16,7 +16,6 @@ public class LootVisualReplacer : MonoBehaviour
 
     private IEnumerator Start()
     {
-        // Wait until MuseumBuilder has generated the loot objects.
         yield return null;
 
         ReplaceLootSprite(firstLootName, crownSprite);

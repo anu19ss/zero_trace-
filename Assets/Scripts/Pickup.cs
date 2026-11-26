@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// Added automatically by MuseumBuilder to loot, keycards and exit markers.
 public class Pickup : MonoBehaviour
 {
     public enum Kind { Loot, Exit, Keycard1, Keycard2 }

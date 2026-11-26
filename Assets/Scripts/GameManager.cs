@@ -1,8 +1,6 @@
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Tracks loot, keycards, dog treats, game over and win.
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -11,7 +9,6 @@ public class GameManager : MonoBehaviour
     public bool GameOver { get; private set; }
     public bool Won { get; private set; }
 
-    // Dog treat system
     public bool HasDogTreat { get; private set; }
     public int DogTreatCost = 50;
     public float DogTreatUseRadius = 3f;
@@ -65,7 +62,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Restart game
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(
@@ -73,13 +69,11 @@ public class GameManager : MonoBehaviour
             );
         }
 
-        // Buy dog treat
         if (Input.GetKeyDown(KeyCode.B))
         {
             BuyDogTreat();
         }
 
-        // Use dog treat
         if (Input.GetKeyDown(KeyCode.T))
         {
             UseDogTreat();
@@ -92,7 +86,6 @@ public class GameManager : MonoBehaviour
         Message("Loot +$" + value);
     }
 
-    // Purchase a dog treat using collected loot.
     public bool BuyDogTreat()
     {
         if (HasDogTreat)
@@ -114,7 +107,6 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    // Use a purchased treat to distract the nearest dog.
     public bool UseDogTreat()
     {
         if (!HasDogTreat)
@@ -153,7 +145,6 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
-        // Try to distract the nearest dog.
         bool distracted = nearestDog.TryDistract(
             playerPosition,
             DogTreatUseRadius,
@@ -166,7 +157,6 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
-        // Consume the treat only if distraction succeeds.
         HasDogTreat = false;
         ShowDogTreatVisual(nearestDog, DogTreatDistractionDuration);
 
@@ -191,7 +181,6 @@ public class GameManager : MonoBehaviour
         Destroy(visual, duration);
     }
 
-    // Finds the player position using the dog's perception system.
     Vector2 GetPlayerPosition()
     {
         DogAI[] dogs = FindObjectsOfType<DogAI>();
@@ -205,7 +194,6 @@ public class GameManager : MonoBehaviour
                 return perception.ThiefPosition;
         }
 
-        // Fallback if no dog perception is available.
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)
@@ -295,7 +283,6 @@ public class GameManager : MonoBehaviour
             smallStyle
         );
 
-        // Display dog treat status.
         string treatStatus = HasDogTreat
             ? "Dog Treat: Owned - Press T to use"
             : "Dog Treat: $" + DogTreatCost + " - Press B to buy";

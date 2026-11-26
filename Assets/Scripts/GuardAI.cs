@@ -1,34 +1,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Guard AI, version 1.
-// States: Patrol -> Investigate -> Chase -> Search -> Return.
-// Needs: a Rigidbody2D (Gravity Scale 0), ThiefController.cs in the project,
-// the thief tagged "Player", and the vision cone as the FIRST child of this object.
 [RequireComponent(typeof(Rigidbody2D))]
 public class GuardAI : MonoBehaviour
 {
     public enum State { Patrol, Investigate, Chase, Search, Return }
 
     [Header("Vision")]
-    public float viewRange = 6f;                 // cells
-    [Range(10f, 180f)] public float viewAngle = 60f;   // total cone angle (the cone sprite is 60)
-    public float detectTime = 1f;                // seconds of continuous sight before detection
-    public float detectDecay = 0.5f;             // meter drain per second when not seen
+    public float viewRange = 6f;
+    [Range(10f, 180f)] public float viewAngle = 60f;
+    public float detectTime = 1f;
+    public float detectDecay = 0.5f;
 
     [Header("Movement")]
     public float patrolSpeed = 2f;
     public float chaseSpeed = 4f;
-    public float turnSpeed = 360f;               // degrees per second
+    public float turnSpeed = 360f;
     public float catchDistance = 0.8f;
 
     [Header("Steering")]
-    public float lookAheadMax = 1f;              // seconds: caps how far ahead Pursuit predicts
-    public float feelerLength = 1.2f;            // wall-avoidance whisker length (cells)
-    public float avoidStrength = 1.5f;           // how hard walls push the guard away
+    public float lookAheadMax = 1f;
+    public float feelerLength = 1.2f;
+    public float avoidStrength = 1.5f;
 
     [Header("Teamwork")]
-    public float shareRadius = 12f;              // guards this close hear a chase alert
+    public float shareRadius = 12f;
 
     [Header("Timing")]
     public float loseSightTime = 2f;
@@ -39,7 +35,7 @@ public class GuardAI : MonoBehaviour
     public Transform[] waypoints;
 
     public State CurrentState { get; private set; } = State.Patrol;
-    public float Detection { get; private set; }  // 0 to 1
+    public float Detection { get; private set; }
     public bool HasVisualContact { get; private set; }
     public Vector2 LastKnownPosition { get { return lastKnown; } }
 
@@ -134,7 +130,7 @@ public class GuardAI : MonoBehaviour
 
             case State.Search:
                 desiredVel = Vector2.zero;
-                transform.Rotate(0f, 0f, 90f * Time.deltaTime);   // look around
+                transform.Rotate(0f, 0f, 90f * Time.deltaTime);
                 timer += Time.deltaTime;
                 if (Detection >= 1f) EnterChase();
                 else if (heard) { targetPoint = player.position; Enter(State.Investigate); }
@@ -157,8 +153,6 @@ public class GuardAI : MonoBehaviour
         rb.velocity = desiredVel;
     }
 
-    // ---------- state helpers ----------
-
     void Enter(State s)
     {
         CurrentState = s;
@@ -172,13 +166,10 @@ public class GuardAI : MonoBehaviour
         ShareAlert();
     }
 
-    // ---------- teamwork ----------
-
     void OnEnable()
     {
         all.Add(this);
 
-        // Guards walk through each other so two guards can never block one another.
         Collider2D[] mine = GetComponents<Collider2D>();
         foreach (GuardAI other in all)
         {
@@ -194,7 +185,6 @@ public class GuardAI : MonoBehaviour
         all.Remove(this);
     }
 
-    // Called by cameras and lasers: the nearest guards go and investigate this position.
     public static void AlertNearest(Vector2 pos, int count)
     {
         List<GuardAI> sorted = new List<GuardAI>(all);
@@ -202,14 +192,12 @@ public class GuardAI : MonoBehaviour
         for (int i = 0; i < sorted.Count && i < count; i++) sorted[i].HearAlert(pos);
     }
 
-    // Called by distraction items: every guard inside the radius goes to investigate.
     public static void AlertWithin(Vector2 pos, float radius)
     {
         foreach (GuardAI g in all)
             if (Vector2.Distance(g.transform.position, pos) <= radius) g.HearAlert(pos);
     }
 
-    // A guard that is already chasing ignores alerts; everyone else goes to investigate.
     public void HearAlert(Vector2 pos)
     {
         if (CurrentState == State.Chase) return;
@@ -217,7 +205,6 @@ public class GuardAI : MonoBehaviour
         Enter(State.Investigate);
     }
 
-    // When this guard starts a chase, nearby guards are told where the thief was seen.
     void ShareAlert()
     {
         foreach (GuardAI other in all)
@@ -245,18 +232,16 @@ public class GuardAI : MonoBehaviour
             return;
         }
 
-        // No waypoints: walk forward, turn around at a wall or when stuck.
         if (Time.time >= nextStuckCheck)
         {
             if (Vector2.Distance(transform.position, stuckCheckPos) < 0.1f) transform.Rotate(0f, 0f, 180f);
             stuckCheckPos = transform.position;
             nextStuckCheck = Time.time + 0.6f;
         }
+
         if (WallAhead(0.8f)) transform.Rotate(0f, 0f, 180f);
         desiredVel = (Vector2)transform.right * patrolSpeed;
     }
-
-    // ---------- movement ----------
 
     void MoveTo(Vector2 target, float speed)
     {
@@ -270,8 +255,6 @@ public class GuardAI : MonoBehaviour
         desiredVel = dir * speed;
     }
 
-    // PURSUIT: aim at where the thief will be, not where he is now.
-    // The prediction time is the travel time to him, capped by lookAheadMax.
     Vector2 PredictedPosition()
     {
         Vector2 pos = player.position;
@@ -282,9 +265,6 @@ public class GuardAI : MonoBehaviour
         return pos + thiefRb.velocity * t;
     }
 
-    // WALL AVOIDANCE: three whiskers (straight ahead and +/- 35 degrees).
-    // Any whisker that touches a wall pushes the guard along that wall's normal,
-    // and the push is stronger the closer the wall is.
     Vector2 AvoidWalls(Vector2 dir)
     {
         Vector2 result = dir;
@@ -300,17 +280,14 @@ public class GuardAI : MonoBehaviour
                 if (!IsWall(h.collider)) continue;
                 float closeness = 1f - h.distance / feelerLength;
                 result += h.normal * avoidStrength * closeness;
-                break;   // only the nearest wall on this whisker counts
+                break;
             }
         }
 
-        // Head-on wall: the pushes can cancel out, so slide along the wall instead.
         if (result.sqrMagnitude < 0.05f) result = new Vector2(-dir.y, dir.x);
         return result.normalized;
     }
 
-    // TODO: replace with member 1's A* (FindPath) so the guard walks around walls.
-    // For now the guard walks in a straight line to the target.
     Vector2 NextPoint(Vector2 target)
     {
         return target;
@@ -328,8 +305,6 @@ public class GuardAI : MonoBehaviour
         return Vector2.Distance(transform.position, point) < 0.3f;
     }
 
-    // ---------- perception ----------
-
     bool CanSeePlayer()
     {
         Vector2 eye = transform.position;
@@ -339,7 +314,6 @@ public class GuardAI : MonoBehaviour
         if (dist > viewRange) return false;
         if (Vector2.Angle(transform.right, toPlayer) > viewAngle * 0.5f) return false;
 
-        // A crouching thief is only seen from half the range.
         if (thief != null && thief.IsCrouching && dist > viewRange * 0.5f) return false;
 
         if (thief != null && thief.IsHidden) return false;
@@ -370,7 +344,6 @@ public class GuardAI : MonoBehaviour
         return false;
     }
 
-    // Walls and doors are created by MuseumBuilder under groups named "Walls" and "Doors".
     public static bool IsWall(Collider2D c)
     {
         if (c == null || c.isTrigger) return false;
@@ -378,13 +351,10 @@ public class GuardAI : MonoBehaviour
         return p != null && (p.name == "Walls" || p.name == "Doors");
     }
 
-    // ---------- cone visuals ----------
-
-    // Scales the cone child so its length matches viewRange.
     void FitCone()
     {
         if (cone == null) return;
-        float s = viewRange / (2f * transform.lossyScale.x);   // cone sprite is 2 units long at scale 1
+        float s = viewRange / (2f * transform.lossyScale.x);
         cone.transform.localPosition = Vector3.zero;
         cone.transform.localRotation = Quaternion.identity;
         cone.transform.localScale = new Vector3(s, s, 1f);

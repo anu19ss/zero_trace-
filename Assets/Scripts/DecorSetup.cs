@@ -1,10 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-// The decorations (tables, plants, bookshelves) are created when the game starts,
-// so components added by hand in the editor disappear. This script adds them in code instead.
-// It can also place EXTRA hiding spots and tables by copying ones that already exist.
-// Put it on ONE empty GameObject in the scene.
 public class DecorSetup : MonoBehaviour
 {
     [Header("Which objects get which behaviour (by the START of their name)")]
@@ -14,7 +10,7 @@ public class DecorSetup : MonoBehaviour
     [Tooltip("These can be knocked over (press F).")]
     public string[] distractNameStarts = { "MuseumTable" };
 
-    public float triggerSize = 1.5f;   // size of the interaction area, in cells
+    public float triggerSize = 1.5f;
 
     [Header("Extra items placed by map cell (X = column, Y = row, row 0 is the top)")]
     public int mapWidth = 40;
@@ -39,9 +35,9 @@ public class DecorSetup : MonoBehaviour
 
     IEnumerator Start()
     {
-        yield return null;                       // wait for the museum to be built
+        yield return null;
         Apply();
-        yield return new WaitForSeconds(1f);     // in case some decorations appear a little later
+        yield return new WaitForSeconds(1f);
         Apply();
     }
 
@@ -66,14 +62,13 @@ public class DecorSetup : MonoBehaviour
         }
     }
 
-    // Copies an existing hiding plant and an existing table to the extra cells, once.
     void SpawnExtras()
     {
         if (extrasSpawned) return;
 
         GameObject hidingSource = FindByNameStart("HidingPlant");
         GameObject tableSource = FindByNameStart("MuseumTable");
-        if (hidingSource == null && tableSource == null) return;   // decorations not built yet
+        if (hidingSource == null && tableSource == null) return;
 
         if (hidingSource != null)
             foreach (Vector2Int cell in extraHidingCells)
@@ -93,7 +88,6 @@ public class DecorSetup : MonoBehaviour
         copy.transform.position = CellToWorld(cell);
     }
 
-    // Same maths as MuseumBuilder (the museum is centred on the world origin).
     Vector3 CellToWorld(Vector2Int cell)
     {
         float x = cell.x - mapWidth / 2f + 0.5f;
@@ -114,7 +108,6 @@ public class DecorSetup : MonoBehaviour
         if (box == null) box = go.AddComponent<BoxCollider2D>();
         box.isTrigger = true;
 
-        // Make the area about triggerSize cells wide in the world, whatever the object's scale is.
         Vector3 s = go.transform.lossyScale;
         float sx = Mathf.Max(0.01f, Mathf.Abs(s.x));
         float sy = Mathf.Max(0.01f, Mathf.Abs(s.y));

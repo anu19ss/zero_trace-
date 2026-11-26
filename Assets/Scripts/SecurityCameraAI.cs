@@ -1,8 +1,5 @@
 using UnityEngine;
 
-// Security camera AI: sweeps left and right, and alerts the nearest guards when it spots the thief.
-// Put this on the SecurityCamera prefab. The old sprite cone (first child) is hidden;
-// a wall-clipped mesh cone is built at runtime instead, so it never leaks outside the layout.
 public class SecurityCameraAI : MonoBehaviour
 {
     [Header("Vision")]
@@ -12,7 +9,7 @@ public class SecurityCameraAI : MonoBehaviour
     public float detectDecay = 0.5f;
 
     [Header("Sweep")]
-    public float sweepAngle = 30f;      // swings this many degrees either side
+    public float sweepAngle = 30f;
     public float sweepSpeed = 0.7f;
 
     [Header("Limits (override old prefab values)")]
@@ -21,7 +18,7 @@ public class SecurityCameraAI : MonoBehaviour
     public float maxSweepAngle = 30f;
 
     [Header("Placement")]
-    public float wallInset = 0.3f;      // pushes the camera against the wall it sits next to
+    public float wallInset = 0.3f;
 
     [Header("Cone look")]
     public int coneRays = 24;
@@ -46,7 +43,6 @@ public class SecurityCameraAI : MonoBehaviour
 
     void Start()
     {
-        // The prefab stores older, bigger values; clamp them here.
         viewRange = Mathf.Min(viewRange, maxViewRange);
         viewAngle = Mathf.Min(viewAngle, maxViewAngle);
         sweepAngle = Mathf.Min(sweepAngle, maxSweepAngle);
@@ -58,7 +54,6 @@ public class SecurityCameraAI : MonoBehaviour
             thief = p.GetComponent<ThiefController>();
         }
 
-        // Hide the old sprite cone (first child) and build the mesh cone.
         if (transform.childCount > 0)
         {
             SpriteRenderer old = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -67,12 +62,9 @@ public class SecurityCameraAI : MonoBehaviour
         BuildConeObject();
 
         PlaceOnWall();
-        phase = transform.position.x + transform.position.y;   // so cameras do not all swing together
+        phase = transform.position.x + transform.position.y;
     }
 
-    // Looks at the neighbouring cells, finds the walls, faces away from them
-    // (snapped to 45 degrees, so corner cameras look diagonally into the room)
-    // and slides the camera a little towards the wall.
     void PlaceOnWall()
     {
         Vector2 away = Vector2.zero;
@@ -89,14 +81,14 @@ public class SecurityCameraAI : MonoBehaviour
                 {
                     if (dr == 0 && dc == 0) continue;
                     if (!mb.IsBlocked(row + dr, col + dc)) continue;
-                    Vector2 toWall = new Vector2(dc, -dr);   // row grows downward, world y grows upward
+                    Vector2 toWall = new Vector2(dc, -dr);
                     away -= toWall;
-                    if (dr == 0 || dc == 0) nearestWall += toWall;   // only side-on walls for the inset
+                    if (dr == 0 || dc == 0) nearestWall += toWall;
                 }
             }
         }
 
-        if (away.sqrMagnitude < 0.01f)   // no walls around: face the middle of the museum
+        if (away.sqrMagnitude < 0.01f)
             away = (Vector2)transform.root.position - (Vector2)transform.position;
 
         float a = Mathf.Atan2(away.y, away.x) * Mathf.Rad2Deg;
@@ -175,7 +167,6 @@ public class SecurityCameraAI : MonoBehaviour
         return true;
     }
 
-    // Fan of rays: each one stops at the first wall, so the cone can never poke through one.
     void UpdateConeMesh()
     {
         if (coneMesh == null) return;
@@ -196,7 +187,7 @@ public class SecurityCameraAI : MonoBehaviour
 
             float dist = viewRange;
             RaycastHit2D[] hits = Physics2D.RaycastAll(origin, dir, viewRange);
-            foreach (RaycastHit2D h in hits)   // sorted nearest first
+            foreach (RaycastHit2D h in hits)
             {
                 if (GuardAI.IsWall(h.collider)) { dist = h.distance; break; }
             }

@@ -1,9 +1,5 @@
 using UnityEngine;
 
-// Added automatically by MuseumBuilder to keycard doors.
-// The thief opens a door by walking into it with the matching keycard.
-// Guards and cops open doors they bump into (they carry keys).
-// A door closes by itself after openTime seconds, once nobody is standing in the doorway.
 public class Door : MonoBehaviour
 {
     public int number = 1;
@@ -45,7 +41,7 @@ public class Door : MonoBehaviour
     {
         if (!IsOpen || Time.time < closeAt) return;
 
-        if (SomeoneInDoorway()) closeAt = Time.time + 0.5f;   // wait until the doorway is clear
+        if (SomeoneInDoorway()) closeAt = Time.time + 0.5f;
         else Close();
     }
 

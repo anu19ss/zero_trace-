@@ -1,8 +1,5 @@
 using UnityEngine;
 
-// Added automatically by MuseumBuilder to every laser cell.
-// All lasers blink together: on for onTime seconds, off for offTime seconds.
-// Touching a laser while it is on alerts the nearest guards.
 public class Laser : MonoBehaviour
 {
     public static float onTime = 2.5f;

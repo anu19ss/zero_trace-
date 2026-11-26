@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
 
-// Put this on an existing decoration (vase, plant, table...) that has a trigger collider.
-// Stand next to it and press F: it falls over, makes a loud noise, and nearby guards
-// walk over to investigate where the noise came from. One use per item.
 [RequireComponent(typeof(SpriteRenderer))]
 public class Distractible : MonoBehaviour
 {
     public KeyCode useKey = KeyCode.F;
-    public float noiseRadius = 10f;                       // guards inside this radius hear it
+    public float noiseRadius = 10f;
     public string prompt = "Press F to knock this over";
     public string doneMessage = "Crash! The guards heard that.";
 
@@ -48,7 +45,6 @@ public class Distractible : MonoBehaviour
     {
         used = true;
 
-        // The item falls over and fades a little.
         transform.Rotate(0f, 0f, 90f);
         Color c = sr.color;
         c.a = 0.6f;
