@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Tracks loot, keycards, game over and win.
+// Tracks loot, keycards, dog treats, game over and win.
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -10,6 +10,13 @@ public class GameManager : MonoBehaviour
     public int Loot { get; private set; }
     public bool GameOver { get; private set; }
     public bool Won { get; private set; }
+
+    // Dog treat system
+    public bool HasDogTreat { get; private set; }
+    public int DogTreatCost = 50;
+    public float DogTreatUseRadius = 3f;
+    public float DogTreatDistractionDuration = 5f;
+    Sprite dogTreatVisualSprite;
 
     bool key1, key2;
     string message = "";
@@ -33,6 +40,7 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
+        dogTreatVisualSprite = Resources.Load<Sprite>("DogTreatBone");
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -47,6 +55,8 @@ public class GameManager : MonoBehaviour
     {
         Loot = 0;
         key1 = key2 = false;
+        HasDogTreat = false;
+
         GameOver = false;
         Won = false;
         message = "";
@@ -55,11 +65,24 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        // Restart game
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(
                 SceneManager.GetActiveScene().buildIndex
             );
+        }
+
+        // Buy dog treat
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            BuyDogTreat();
+        }
+
+        // Use dog treat
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            UseDogTreat();
         }
     }
 
@@ -67,6 +90,128 @@ public class GameManager : MonoBehaviour
     {
         Loot += value;
         Message("Loot +$" + value);
+    }
+
+    // Purchase a dog treat using collected loot.
+    public bool BuyDogTreat()
+    {
+        if (HasDogTreat)
+        {
+            Message("You already have a dog treat!");
+            return false;
+        }
+
+        if (Loot < DogTreatCost)
+        {
+            Message("Not enough money for a dog treat!");
+            return false;
+        }
+
+        Loot -= DogTreatCost;
+        HasDogTreat = true;
+
+        Message("Dog treat purchased! Press T to use it.");
+        return true;
+    }
+
+    // Use a purchased treat to distract the nearest dog.
+    public bool UseDogTreat()
+    {
+        if (!HasDogTreat)
+        {
+            Message("You don't have a dog treat!");
+            return false;
+        }
+
+        DogAI[] dogs = FindObjectsOfType<DogAI>();
+
+        DogAI nearestDog = null;
+        float nearestDistance = Mathf.Infinity;
+
+        Vector2 playerPosition = GetPlayerPosition();
+
+        foreach (DogAI dog in dogs)
+        {
+            if (dog == null)
+                continue;
+
+            float distance = Vector2.Distance(
+                playerPosition,
+                dog.transform.position
+            );
+
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestDog = dog;
+            }
+        }
+
+        if (nearestDog == null)
+        {
+            Message("No dog nearby!");
+            return false;
+        }
+
+        // Try to distract the nearest dog.
+        bool distracted = nearestDog.TryDistract(
+            playerPosition,
+            DogTreatUseRadius,
+            DogTreatDistractionDuration
+        );
+
+        if (!distracted)
+        {
+            Message("Get closer to the dog to use the treat!");
+            return false;
+        }
+
+        // Consume the treat only if distraction succeeds.
+        HasDogTreat = false;
+        ShowDogTreatVisual(nearestDog, DogTreatDistractionDuration);
+
+        Message("Dog distracted! Run!");
+        return true;
+    }
+
+    void ShowDogTreatVisual(DogAI dog, float duration)
+    {
+        if (dog == null || dogTreatVisualSprite == null)
+            return;
+
+        GameObject visual = new GameObject("DogTreatVisual");
+        visual.transform.SetParent(dog.transform, false);
+        visual.transform.localPosition = new Vector3(0.35f, -0.2f, -0.1f);
+        visual.transform.localScale = Vector3.one * 0.25f;
+
+        SpriteRenderer renderer = visual.AddComponent<SpriteRenderer>();
+        renderer.sprite = dogTreatVisualSprite;
+        renderer.sortingOrder = 11;
+
+        Destroy(visual, duration);
+    }
+
+    // Finds the player position using the dog's perception system.
+    Vector2 GetPlayerPosition()
+    {
+        DogAI[] dogs = FindObjectsOfType<DogAI>();
+
+        if (dogs.Length > 0)
+        {
+            DogPerception perception =
+                dogs[0].GetComponent<DogPerception>();
+
+            if (perception != null)
+                return perception.ThiefPosition;
+        }
+
+        // Fallback if no dog perception is available.
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+            return player.transform.position;
+
+        return Vector2.zero;
     }
 
     public void GiveKey(int number)
@@ -145,8 +290,19 @@ public class GameManager : MonoBehaviour
         );
 
         GUI.Label(
-            new Rect(10, 32, 700, 28),
-            "WASD move  |  Shift run  |  Ctrl or C crouch  |  R restart",
+            new Rect(10, 32, 850, 28),
+            "WASD move | Shift run | Ctrl/C crouch | B buy treat | T use treat | R restart",
+            smallStyle
+        );
+
+        // Display dog treat status.
+        string treatStatus = HasDogTreat
+            ? "Dog Treat: Owned - Press T to use"
+            : "Dog Treat: $" + DogTreatCost + " - Press B to buy";
+
+        GUI.Label(
+            new Rect(10, 56, 600, 28),
+            treatStatus,
             smallStyle
         );
 

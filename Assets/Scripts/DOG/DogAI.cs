@@ -9,7 +9,8 @@ public class DogAI : MonoBehaviour
         Patrol,
         Chase,
         InvestigateSound,
-        TrackScent
+        TrackScent,
+        Distracted
     }
 
     [Header("Current State")]
@@ -36,6 +37,10 @@ public class DogAI : MonoBehaviour
 
     [Header("Catch Settings")]
     public float catchDistance = 0.8f;
+
+    [Header("Dog Treat")]
+    public float distractionDuration = 5f;
+    private float distractionTimer;
 
     private bool hasCaughtThief = false;
 
@@ -95,6 +100,20 @@ public class DogAI : MonoBehaviour
 
         if (hasCaughtThief)
             return;
+
+        // Handle the distracted state before detection or catching.
+        if (currentState == DogState.Distracted)
+        {
+            distractionTimer -= Time.deltaTime;
+
+            // Stay distracted until the timer expires.
+            if (distractionTimer > 0f)
+                return;
+
+            // Distraction has ended.
+            currentState = DogState.Patrol;
+            ClearPath();
+        }
 
         float distanceToThief = Vector2.Distance(
             transform.position,
@@ -163,7 +182,39 @@ public class DogAI : MonoBehaviour
             case DogState.TrackScent:
                 TrackScent();
                 break;
+
+            case DogState.Distracted:
+                // Dog remains stationary while distracted.
+                break;
         }
+    }
+
+    // Called by GameManager when the player uses a dog treat.
+    public bool TryDistract(
+        Vector2 playerPosition,
+        float useRadius,
+        float duration
+    )
+    {
+        if (hasCaughtThief)
+            return false;
+
+        float distance = Vector2.Distance(
+            transform.position,
+            playerPosition
+        );
+
+        if (distance > useRadius)
+            return false;
+
+        currentState = DogState.Distracted;
+        distractionTimer = duration;
+
+        ClearPath();
+
+        Debug.Log("Dog distracted by treat!");
+
+        return true;
     }
 
     void Patrol()
