@@ -57,7 +57,7 @@ public class DogScentTracker : MonoBehaviour
             return;
         }
 
-        // Check whether a wall or locked door blocks the scent.
+        
         RaycastHit2D[] hits = Physics2D.RaycastAll(
             origin,
             direction.normalized,
@@ -72,14 +72,14 @@ public class DogScentTracker : MonoBehaviour
 
             Transform hitTransform = hit.collider.transform;
 
-            // Ignore the dog's own colliders.
+            
             if (hitTransform == transform ||
                 hitTransform.IsChildOf(transform))
             {
                 continue;
             }
 
-            // An obstacle blocks scent detection.
+            
             ResetScentDetection();
             return;
         }

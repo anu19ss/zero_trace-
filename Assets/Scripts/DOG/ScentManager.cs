@@ -85,7 +85,7 @@ public class ScentManager : MonoBehaviour
 
     void CreateScent()
     {
-        // No scent when standing still.
+        
         if (thief.CurrentNoiseRadius <= 0f &&
             !thief.IsCrouching)
         {
@@ -111,7 +111,7 @@ public class ScentManager : MonoBehaviour
             scentColor = walkingColor;
         }
 
-        // Store the scent information.
+        
         ScentTrail trail = new ScentTrail(
             thief.transform.position,
             strength,
@@ -121,7 +121,7 @@ public class ScentManager : MonoBehaviour
 
         scentTrails.Add(trail);
 
-        // Create a visible marker in the Game view.
+        
         GameObject marker = Instantiate(
             scentMarkerPrefab,
             thief.transform.position,
@@ -164,7 +164,7 @@ public class ScentManager : MonoBehaviour
                 }
             }
 
-            // Remove expired scent traces and their markers.
+            
             if (trail.IsExpired)
             {
                 if (i < scentMarkers.Count &&

@@ -101,16 +101,16 @@ public class DogAI : MonoBehaviour
         if (hasCaughtThief)
             return;
 
-        // Handle the distracted state before detection or catching.
+        
         if (currentState == DogState.Distracted)
         {
             distractionTimer -= Time.deltaTime;
 
-            // Stay distracted until the timer expires.
+            
             if (distractionTimer > 0f)
                 return;
 
-            // Distraction has ended.
+            
             currentState = DogState.Patrol;
             ClearPath();
         }
@@ -184,12 +184,11 @@ public class DogAI : MonoBehaviour
                 break;
 
             case DogState.Distracted:
-                // Dog remains stationary while distracted.
                 break;
         }
     }
 
-    // Called by GameManager when the player uses a dog treat.
+    
     public bool TryDistract(
         Vector2 playerPosition,
         float useRadius,
@@ -330,7 +329,7 @@ public class DogAI : MonoBehaviour
         if (animator == null || movement.sqrMagnitude < 0.000001f)
             return;
 
-        // Choose the dominant movement direction.
+        
         if (Mathf.Abs(movement.x) > Mathf.Abs(movement.y))
         {
             lastDirection = movement.x < 0f ? 1 : 2;

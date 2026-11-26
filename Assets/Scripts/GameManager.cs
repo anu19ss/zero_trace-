@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour
     public bool GameOver { get; private set; }
     public bool Won { get; private set; }
 
+    
     public bool HasDogTreat { get; private set; }
     public int DogTreatCost = 50;
     public float DogTreatUseRadius = 3f;
@@ -62,6 +64,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(
@@ -69,11 +72,13 @@ public class GameManager : MonoBehaviour
             );
         }
 
+        
         if (Input.GetKeyDown(KeyCode.B))
         {
             BuyDogTreat();
         }
 
+        
         if (Input.GetKeyDown(KeyCode.T))
         {
             UseDogTreat();
@@ -86,6 +91,7 @@ public class GameManager : MonoBehaviour
         Message("Loot +$" + value);
     }
 
+    
     public bool BuyDogTreat()
     {
         if (HasDogTreat)
@@ -107,6 +113,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    
     public bool UseDogTreat()
     {
         if (!HasDogTreat)
@@ -145,6 +152,7 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
+        
         bool distracted = nearestDog.TryDistract(
             playerPosition,
             DogTreatUseRadius,
@@ -157,6 +165,7 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
+        
         HasDogTreat = false;
         ShowDogTreatVisual(nearestDog, DogTreatDistractionDuration);
 
@@ -181,6 +190,7 @@ public class GameManager : MonoBehaviour
         Destroy(visual, duration);
     }
 
+    
     Vector2 GetPlayerPosition()
     {
         DogAI[] dogs = FindObjectsOfType<DogAI>();
@@ -194,6 +204,7 @@ public class GameManager : MonoBehaviour
                 return perception.ThiefPosition;
         }
 
+        
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)
@@ -283,6 +294,7 @@ public class GameManager : MonoBehaviour
             smallStyle
         );
 
+        
         string treatStatus = HasDogTreat
             ? "Dog Treat: Owned - Press T to use"
             : "Dog Treat: $" + DogTreatCost + " - Press B to buy";
