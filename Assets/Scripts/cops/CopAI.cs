@@ -783,6 +783,8 @@ public class CopAI : MonoBehaviour
 
     bool CanSeePlayer()
     {
+        if (thief != null && thief.IsHidden)
+            return false;
         Vector2 delta = (Vector2)player.position - (Vector2)transform.position;
         float distance = delta.magnitude;
         if (distance <= 0.01f)
@@ -828,6 +830,8 @@ public class CopAI : MonoBehaviour
 
     bool HearsPlayer()
     {
+        if (thief != null && thief.IsHidden)
+            return false;
         return thief != null && thief.CurrentNoiseRadius > 0f &&
             Vector2.Distance(transform.position, player.position) <=
             thief.CurrentNoiseRadius * hearingBonus;

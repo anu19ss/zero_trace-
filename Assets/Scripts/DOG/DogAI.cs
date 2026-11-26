@@ -14,6 +14,7 @@ public class DogAI : MonoBehaviour
 
     [Header("Current State")]
     public DogState currentState = DogState.Patrol;
+    ThiefController thief;
 
     [Header("Patrol")]
     public Transform pointA;
@@ -82,6 +83,7 @@ public class DogAI : MonoBehaviour
         // Start with the downward-facing animation.
         if (animator != null)
             animator.SetInteger("Direction", lastDirection);
+        thief = FindObjectOfType<ThiefController>();
     }
 
     void Update()
@@ -89,6 +91,7 @@ public class DogAI : MonoBehaviour
         if (perception == null || scentTracker == null ||
             pathfinding == null)
             return;
+        bool hidden = thief != null && thief.IsHidden;
 
         if (hasCaughtThief)
             return;
@@ -98,7 +101,7 @@ public class DogAI : MonoBehaviour
             perception.ThiefPosition
         );
 
-        if (distanceToThief <= catchDistance)
+        if (!hidden && distanceToThief <= catchDistance)
         {
             hasCaughtThief = true;
 
@@ -116,7 +119,7 @@ public class DogAI : MonoBehaviour
             return;
         }
 
-        if (perception.CanHearThief)
+        if (perception.CanHearThief && !hidden)
         {
             lastHeardPosition = perception.LastHeardPosition;
             soundMemoryTimer = soundMemoryDuration;
@@ -126,7 +129,7 @@ public class DogAI : MonoBehaviour
             soundMemoryTimer -= Time.deltaTime;
         }
 
-        if (perception.CanSeeThief)
+        if (perception.CanSeeThief && !hidden)
         {
             currentState = DogState.Chase;
         }
@@ -134,7 +137,7 @@ public class DogAI : MonoBehaviour
         {
             currentState = DogState.InvestigateSound;
         }
-        else if (scentTracker.HasFoundScent)
+        else if (scentTracker.HasFoundScent && !hidden)
         {
             currentState = DogState.TrackScent;
         }

@@ -56,6 +56,8 @@ public class GuardAI : MonoBehaviour
     Vector2 desiredVel;
     float timer;
     int wpIndex;
+    float nextStuckCheck;
+    Vector2 stuckCheckPos;
 
     void Start()
     {
@@ -175,6 +177,16 @@ public class GuardAI : MonoBehaviour
     void OnEnable()
     {
         all.Add(this);
+
+        // Guards walk through each other so two guards can never block one another.
+        Collider2D[] mine = GetComponents<Collider2D>();
+        foreach (GuardAI other in all)
+        {
+            if (other == this) continue;
+            foreach (Collider2D a in mine)
+                foreach (Collider2D b in other.GetComponents<Collider2D>())
+                    Physics2D.IgnoreCollision(a, b, true);
+        }
     }
 
     void OnDisable()
@@ -188,6 +200,13 @@ public class GuardAI : MonoBehaviour
         List<GuardAI> sorted = new List<GuardAI>(all);
         sorted.Sort((a, b) => Vector2.Distance(a.transform.position, pos).CompareTo(Vector2.Distance(b.transform.position, pos)));
         for (int i = 0; i < sorted.Count && i < count; i++) sorted[i].HearAlert(pos);
+    }
+
+    // Called by distraction items: every guard inside the radius goes to investigate.
+    public static void AlertWithin(Vector2 pos, float radius)
+    {
+        foreach (GuardAI g in all)
+            if (Vector2.Distance(g.transform.position, pos) <= radius) g.HearAlert(pos);
     }
 
     // A guard that is already chasing ignores alerts; everyone else goes to investigate.
@@ -226,7 +245,13 @@ public class GuardAI : MonoBehaviour
             return;
         }
 
-        // No waypoints: walk forward and turn around at a wall.
+        // No waypoints: walk forward, turn around at a wall or when stuck.
+        if (Time.time >= nextStuckCheck)
+        {
+            if (Vector2.Distance(transform.position, stuckCheckPos) < 0.1f) transform.Rotate(0f, 0f, 180f);
+            stuckCheckPos = transform.position;
+            nextStuckCheck = Time.time + 0.6f;
+        }
         if (WallAhead(0.8f)) transform.Rotate(0f, 0f, 180f);
         desiredVel = (Vector2)transform.right * patrolSpeed;
     }
@@ -316,6 +341,8 @@ public class GuardAI : MonoBehaviour
 
         // A crouching thief is only seen from half the range.
         if (thief != null && thief.IsCrouching && dist > viewRange * 0.5f) return false;
+
+        if (thief != null && thief.IsHidden) return false;
 
         return !WallBetween(eye, player.position);
     }

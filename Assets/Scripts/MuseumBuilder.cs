@@ -34,6 +34,7 @@ public class MuseumBuilder : MonoBehaviour
     public GameObject dogPrefab;
     public GameObject cameraPrefab;
     public bool spawnDogsFromMap;
+    public float dogScale = 0.6f;   // 1 = original size
 
     [Header("Dog Visuals (used when no dog prefab is assigned)")]
     public Sprite dogSprite;
@@ -251,7 +252,7 @@ public class MuseumBuilder : MonoBehaviour
 
             dog.AddComponent<DogAI>();
         }
-
+        dog.transform.localScale = Vector3.one * dogScale;
         DogAI dogAI = dog.GetComponent<DogAI>();
         DogPathfinding pathfinding = dog.GetComponent<DogPathfinding>();
         if (dogAI == null || pathfinding == null)
